@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateDetallePedidoDto } from './dto/create-detalle_pedido.dto';
 import { UpdateDetallePedidoDto } from './dto/update-detalle_pedido.dto';
+import { DetallePedido } from './entities/detalle_pedido.entity';
 
 @Injectable()
 export class DetallePedidoService {
-  create(createDetallePedidoDto: CreateDetallePedidoDto) {
-    return 'This action adds a new detallePedido';
+  constructor(
+    @InjectRepository(DetallePedido)
+    private detallePedidoRepository: Repository<DetallePedido>,
+  ) {}
+
+  async create(createDetallePedidoDto: CreateDetallePedidoDto): Promise<DetallePedido> {
+    const detallePedido = this.detallePedidoRepository.create(createDetallePedidoDto);
+    return this.detallePedidoRepository.save(detallePedido);
   }
 
-  findAll() {
-    return `This action returns all detallePedido`;
+  async findAll(): Promise<DetallePedido[]> {
+    return this.detallePedidoRepository.find({
+      order: {
+        id: 'ASC',
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} detallePedido`;
+  async findOne(id: number): Promise<DetallePedido> {
+    const detallePedido = await this.detallePedidoRepository.findOneBy({ id });
+    if (!detallePedido) {
+      throw new NotFoundException(`Detalle Pedido con ID ${id} no encontrado`);
+    }
+    return detallePedido;
   }
 
-  update(id: number, updateDetallePedidoDto: UpdateDetallePedidoDto) {
-    return `This action updates a #${id} detallePedido`;
+  async update(id: number, updateDetallePedidoDto: UpdateDetallePedidoDto): Promise<DetallePedido> {
+    await this.findOne(id);
+    await this.detallePedidoRepository.update(id, updateDetallePedidoDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} detallePedido`;
+  async remove(id: number): Promise<DetallePedido> {
+    const detallePedido = await this.findOne(id);
+    await this.detallePedidoRepository.remove(detallePedido);
+    return detallePedido;
   }
 }
