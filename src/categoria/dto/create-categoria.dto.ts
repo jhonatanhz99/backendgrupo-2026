@@ -1,7 +1,3 @@
-export class CreateCategoriaDto {
-  nombre: string;
-  descripcion?: string;
-}
 import { IsNotEmpty, IsString, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 export class CreateCategoriaDto {

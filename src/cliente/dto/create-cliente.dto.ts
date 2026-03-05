@@ -1,10 +1,3 @@
-export class CreateClienteDto {
-  nombre: string;
-  email: string;
-  telefono?: string;
-  direccion?: string;
-  ciudad?: string;
-}
 import { IsNotEmpty, IsString, IsEmail, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 export class CreateClienteDto {
