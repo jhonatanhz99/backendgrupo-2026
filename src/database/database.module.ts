@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
                 password: configService.get<string>('DB_PASSWORD', ''),
                 database: configService.get<string>('DB_NAME', 'taller_backend'),
                 autoLoadEntities: true,
-                synchronize: true, // Use only in development
+                synchronize: true,
             }),
         }),
     ],
